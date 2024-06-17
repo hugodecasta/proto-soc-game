@@ -50,12 +50,12 @@ const game = await new INTER_GAME(
         }
         if (topic == 'mouse') {
             const { user, x, y } = data
-            if (user == user_data.user) return
+            // if (user == user_data.user) return
             planch.update_user(user, null, x, y, true)
         }
         if (topic == 'control') {
             const { user, control } = data
-            if (user == user_data.user) return
+            // if (user == user_data.user) return
             planch.update_user(user, null, null, null, control)
         }
     }
