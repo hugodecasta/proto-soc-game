@@ -1,0 +1,74 @@
+{
+    "mission": {
+        "shuffle": true,
+        "cards": {}
+    },
+    "coordA": {
+        "shuffle": true,
+        "cards": {
+            "A": 1,
+            "B": 1,
+            "C": 1,
+            "D": 1,
+            "E": 1,
+            "F": 1
+        }
+    },
+    "coordB": {
+        "shuffle": true,
+        "cards": {
+            "1": 1,
+            "2": 1,
+            "3": 1,
+            "4": 1,
+            "5": 1,
+            "6": 1,
+            "7": 1,
+            "8": 1,
+            "9": 1
+        }
+    },
+    "distance": {
+        "shuffle": true,
+        "cards": {
+            "1M": 4,
+            "2M": 4,
+            "3M": 4,
+            "4M": 4
+        }
+    },
+    "cap": {
+        "shuffle": true,
+        "cards": {
+            "0°": 4,
+            "45°": 4,
+            "90°": 4,
+            "135%": 4,
+            "180%": 4,
+            "125%": 4,
+            "170%": 4,
+            "315%": 4
+        }
+    },
+    "detections": {
+        "shuffle": true,
+        "cards": {
+            "Se rapproche de vous a chaque tour de 2M\nP: missile, I:bateau": 4,
+            "Reste sur place\nP: Homme a la mer, I: bateau": 4,
+            "Mouvement aleatoire (tirer cap + 1M)\nP: missile, I:bateau": 4
+        }
+    },
+    "vent": {
+        "shuffle": true,
+        "cards": {
+            "0°": 1,
+            "45°": 1,
+            "90°": 1,
+            "135%": 1,
+            "180%": 1,
+            "125%": 1,
+            "170%": 1,
+            "315%": 1
+        }
+    }
+}
