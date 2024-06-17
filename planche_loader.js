@@ -90,13 +90,13 @@ export class PLANCHE3D extends EventHandler {
 
             const tube_h = 1000
 
-            const sphere = new THREE.Mesh(new THREE.SphereGeometry(0.5, 5, 5), material)
+            // const sphere = new THREE.Mesh(new THREE.SphereGeometry(0.5, 5, 5), material)
             const tube = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.05, tube_h, tube_h, 2), material)
             tube.rotation.x = Math.PI / 2
             tube.position.z = tube_h / 2
 
             const group = new THREE.Group()
-            group.add(sphere)
+            // group.add(sphere)
             group.add(tube)
 
             this.vp3d.add(group)
