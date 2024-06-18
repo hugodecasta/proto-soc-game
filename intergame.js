@@ -24,7 +24,7 @@ export class INTER_GAME {
             )
 
             const welcome_data = welcome()
-            this.send_data('welcome', welcome_data, 'welcome' + JSON.stringify(welcome_data))
+            this.send_data('welcome', welcome_data, 'welcome' + JSON.stringify(welcome_data) + Date.now())
 
 
             window.addEventListener('beforeunload', (e) => {
@@ -33,7 +33,7 @@ export class INTER_GAME {
 
             window.addEventListener('unload', (e) => {
                 const goodbye_data = goodbye()
-                this.send_data('goodbye', goodbye_data, 'goodbye' + JSON.stringify(goodbye_data))
+                this.send_data('goodbye', goodbye_data, 'goodbye' + JSON.stringify(goodbye_data) + Date.now())
             })
 
             ok(this)

@@ -5,6 +5,7 @@ import * as THREE from 'three'
 import { EventHandler, button, div, h1, listen_to, popup_pop } from "./vanille/components.js"
 import { iter_to_type, THREE_VIEWPORT } from './THREE_VIEWPORT.js'
 
+window.adder = 1
 // ---------------------------------------------------------------------------------- PLANCH OBJECT
 
 let global_planche = null
@@ -77,7 +78,7 @@ export class PLANCHE3D extends EventHandler {
         })))
     }
 
-    update_user(user, color, x, y, show) {
+    update_user(user, color, x, y, show, camera_data) {
         if (!this.users[user]) {
 
             const material = new THREE.MeshStandardMaterial({
@@ -87,31 +88,68 @@ export class PLANCHE3D extends EventHandler {
                 emissive: new THREE.Color(color),
                 emissiveIntensity: 10
             })
-
             const tube_h = 1000
-
-            // const sphere = new THREE.Mesh(new THREE.SphereGeometry(0.5, 5, 5), material)
             const tube = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.05, tube_h, tube_h, 2), material)
             tube.rotation.x = Math.PI / 2
             tube.position.z = tube_h / 2
-
             const group = new THREE.Group()
-            // group.add(sphere)
             group.add(tube)
-
             this.vp3d.add(group)
             iter_to_type(group, 'Mesh', (m) => m.setPointerEvents(false))
-            this.users[user] = group
+
+            const user_cam = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1), material)
+            const cam_nose = new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.2, 1), material)
+            user_cam.add(cam_nose)
+            cam_nose.position.set(0, 0, 1)
+            this.vp3d.add(user_cam)
+            iter_to_type(user_cam, 'Mesh', (m) => m.setPointerEvents(false))
+
+            this.users[user] = {
+                data: {
+                    user,
+                    color,
+                },
+                objs: {
+                    tube: group,
+                    cam: user_cam
+                }
+            }
         }
 
-        if (x) this.users[user].position.x = x
-        if (y) this.users[user].position.y = y
-        // if (color) this.users[user].material.color.set(new THREE.Color(color))
-        if (show != null) this.users[user].visible = show
+        const { tube, cam } = this.users[user].objs
+
+        if (x) tube.position.x = x
+        if (y) tube.position.y = y
+        if (show != null) tube.visible = show
+
+        if (camera_data) {
+            const { cam_pos, tar_pos } = camera_data
+
+            cam.position.x = cam_pos.x
+            cam.position.y = -cam_pos.z
+            cam.position.z = cam_pos.y
+
+            const target = new THREE.Vector3(tar_pos.x, -tar_pos.z, tar_pos.y)
+
+            const direction = new THREE.Vector3()
+            direction.subVectors(target, cam.position).normalize()
+
+
+            const quaternion = new THREE.Quaternion()
+            quaternion.setFromUnitVectors(new THREE.Vector3(0, 0, 1), direction)
+            cam.quaternion.copy(quaternion)
+
+            const euler = new THREE.Euler().setFromQuaternion(cam.quaternion)
+            euler.z = 0
+            cam.quaternion.setFromEuler(euler)
+
+        }
     }
 
     remove_user(user) {
-        this.vp3d.remove(this.users[user])
+        for (const elm of Object.values(this.users[user].objs)) {
+            this.vp3d.remove(elm)
+        }
         delete this.users[user]
     }
 
