@@ -360,9 +360,9 @@ function set_movable(mesh) {
 
 // }
 
-// function set_deck(mesh) {
+function set_deck(mesh) {
 
-// }
+}
 
 // function add_text_to_mesh(mesh, text, size, color = null, x = null, y = null, z = null) {
 //     const text_mesh = new THREE.Mesh(
