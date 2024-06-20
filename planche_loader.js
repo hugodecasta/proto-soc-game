@@ -354,156 +354,166 @@ function set_movable(mesh) {
 
 // ----------------------------------------------------------- DECK
 
-function add_text_to_mesh(mesh, text, size, color = null, x = null, y = null, z = null) {
-    const text_mesh = new THREE.Mesh(
-        new TextGeometry(text, {
-            font,
-            size: size,
-            height: 0.01,
-            curveSegments: 1,
-            bevelEnabled: false,
-        }),
-        new THREE.MeshBasicMaterial({ color: color ?? 0x000000 }),
-    )
-    text_mesh.geometry.computeBoundingBox()
-    const centerOffset = -0.5 * (text_mesh.geometry.boundingBox.max.x - text_mesh.geometry.boundingBox.min.x)
-    text_mesh.position.set(x ?? centerOffset, y ?? 0, z ?? 1)
-    text_mesh.scale.set(1 / mesh.scale.x, 1 / mesh.scale.y, 1)
-    mesh.add(text_mesh)
-}
+// function set_card
 
-function chunkArray(array, n) {
-    if (n <= 0) {
-        throw new Error("n must be a positive integer")
-    }
-    const result = []
-    for (let i = 0; i < array.length; i += n) {
-        result.push(array.slice(i, i + n))
-    }
-    return result
-}
+// function set_card(deck_name, x, y, id = null) {
 
-const out_type = {
-    ouvert: 1,
-    cache: 2,
-    remise_aleatoire: 3,
-    remise_dessus: 3,
-    remise_dessous: 3,
-}
+// }
 
-const table = {}
+// function set_deck(mesh) {
 
-function set_deck(mesh) {
+// }
 
-    mesh.material.transparent = true
+// function add_text_to_mesh(mesh, text, size, color = null, x = null, y = null, z = null) {
+//     const text_mesh = new THREE.Mesh(
+//         new TextGeometry(text, {
+//             font,
+//             size: size,
+//             height: 0.01,
+//             curveSegments: 1,
+//             bevelEnabled: false,
+//         }),
+//         new THREE.MeshBasicMaterial({ color: color ?? 0x000000 }),
+//     )
+//     text_mesh.geometry.computeBoundingBox()
+//     const centerOffset = -0.5 * (text_mesh.geometry.boundingBox.max.x - text_mesh.geometry.boundingBox.min.x)
+//     text_mesh.position.set(x ?? centerOffset, y ?? 0, z ?? 1)
+//     text_mesh.scale.set(1 / mesh.scale.x, 1 / mesh.scale.y, 1)
+//     mesh.add(text_mesh)
+// }
 
-    const deck_name = mesh.userData.deck
+// function chunkArray(array, n) {
+//     if (n <= 0) {
+//         throw new Error("n must be a positive integer")
+//     }
+//     const result = []
+//     for (let i = 0; i < array.length; i += n) {
+//         result.push(array.slice(i, i + n))
+//     }
+//     return result
+// }
 
-    // if (!decks[deck_name]) {
-    //     mesh.parent.remove(mesh)
-    //     return
-    // }
+// const out_type = {
+//     ouvert: 1,
+//     cache: 2,
+//     remise_aleatoire: 3,
+//     remise_dessus: 3,
+//     remise_dessous: 3,
+// }
 
-    add_text_to_mesh(mesh, deck_name, 0.2)
-    const deck = decks[deck_name]
+// const table = {}
 
-    mesh.addEventListener('click', async (evt) => {
-        if (!evt.nb == 0) return
-        deck.name = deck_name
-        const text = deck.pop().replace(/é/g, 'e')
-        popup_carte(deck, text, null, mesh)
-    })
+// function set_deck(mesh) {
 
-    listen_to(() => deck, () => {
-        mesh.castShadow = deck.length > 0
-        mesh.material.opacity = deck.length > 0 ? 1 : 0.2
-    })
-}
+//     mesh.material.transparent = true
 
-function set_card_in(card, text, deck, position) {
-    card?.parent.remove(card)
-    deck.splice(position, 0, text)
-}
+//     const deck_name = mesh.userData.deck
+
+//     // if (!decks[deck_name]) {
+//     //     mesh.parent.remove(mesh)
+//     //     return
+//     // }
+
+//     add_text_to_mesh(mesh, deck_name, 0.2)
+//     const deck = decks[deck_name]
+
+//     mesh.addEventListener('click', async (evt) => {
+//         if (!evt.nb == 0) return
+//         deck.name = deck_name
+//         const text = deck.pop().replace(/é/g, 'e')
+//         popup_carte(deck, text, null, mesh)
+//     })
+
+//     listen_to(() => deck, () => {
+//         mesh.castShadow = deck.length > 0
+//         mesh.material.opacity = deck.length > 0 ? 1 : 0.2
+//     })
+// }
+
+// function set_card_in(card, text, deck, position) {
+//     card?.parent.remove(card)
+//     deck.splice(position, 0, text)
+// }
 
 
-async function popup_carte(deck, text, carte, from_mesh, alter_pos = true) {
+// async function popup_carte(deck, text, carte, from_mesh, alter_pos = true) {
 
-    if (carte) {
-        carte.parent.remove(carte)
-        delete table[text]
-    }
+//     if (carte) {
+//         carte.parent.remove(carte)
+//         delete table[text]
+//     }
 
-    const pop_data = div().add(
-        h1('Carte ' + deck.name),
-        text.replace(/\n/g, '</br>')
-    )
+//     const pop_data = div().add(
+//         h1('Carte ' + deck.name),
+//         text.replace(/\n/g, '</br>')
+//     )
 
-    const out = await popup_pop(
-        pop_data,
-        () => { },
-        (ender) => div('',
-            button('dévoiler sur la table', () => ender(out_type.ouvert)),
-            button('cacher sur la table', () => ender(out_type.cache)),
-            button('remettre dans le paquet', () => ender(out_type.remise_aleatoire)),
-            button('remettre sur le paquet', () => ender(out_type.remise_dessus)),
-            button('remettre sous le paquet', () => ender(out_type.remise_dessous)),
-        )
-    )
+//     const out = await popup_pop(
+//         pop_data,
+//         () => { },
+//         (ender) => div('',
+//             button('dévoiler sur la table', () => ender(out_type.ouvert)),
+//             button('cacher sur la table', () => ender(out_type.cache)),
+//             button('remettre dans le paquet', () => ender(out_type.remise_aleatoire)),
+//             button('remettre sur le paquet', () => ender(out_type.remise_dessus)),
+//             button('remettre sous le paquet', () => ender(out_type.remise_dessous)),
+//         )
+//     )
 
-    let front_text = 'hidden'
+//     let front_text = 'hidden'
 
-    if (out == out_type.ouvert) {
-        front_text = text
-    }
+//     if (out == out_type.ouvert) {
+//         front_text = text
+//     }
 
-    if ([out_type.ouvert, out_type.cache].includes(out)) {
-        table[text] = deck.name
-        const new_carte = from_mesh.clone()
+//     if ([out_type.ouvert, out_type.cache].includes(out)) {
+//         table[text] = deck.name
+//         const new_carte = from_mesh.clone()
 
-        if (carte) {
-            new_carte.position.x = carte.position.x
-            new_carte.position.y = carte.position.y
-        }
-        if (alter_pos) {
-            new_carte.position.y -= 5
-            new_carte.position.x += 0.1
-        }
+//         if (carte) {
+//             new_carte.position.x = carte.position.x
+//             new_carte.position.y = carte.position.y
+//         }
+//         if (alter_pos) {
+//             new_carte.position.y -= 5
+//             new_carte.position.x += 0.1
+//         }
 
-        new_carte.position.z = (Math.random()) * 0.1
-        new_carte.scale.z /= 10
+//         new_carte.position.z = (Math.random()) * 0.1
+//         new_carte.scale.z /= 10
 
-        new_carte.remove(new_carte.children.find(c => c.geometry.type == "TextGeometry"))
+//         new_carte.remove(new_carte.children.find(c => c.geometry.type == "TextGeometry"))
 
-        scene.add(new_carte)
-        console.log(new_carte)
+//         scene.add(new_carte)
+//         console.log(new_carte)
 
-        set_carte(new_carte, text, front_text, deck, from_mesh)
-    }
-    else {
+//         set_carte(new_carte, text, front_text, deck, from_mesh)
+//     }
+//     else {
 
-        const position = {
-            [out_type.remise_aleatoire]: () => Math.floor(Math.random() * deck.length),
-            [out_type.remise_dessous]: () => deck.length,
-            [out_type.remise_dessus]: () => 0,
-        }
+//         const position = {
+//             [out_type.remise_aleatoire]: () => Math.floor(Math.random() * deck.length),
+//             [out_type.remise_dessous]: () => deck.length,
+//             [out_type.remise_dessus]: () => 0,
+//         }
 
-        set_card_in(null, text, deck, position)
+//         set_card_in(null, text, deck, position)
 
-    }
-}
+//     }
+// }
 
-function set_carte(carte, text, front_text, deck, from_mesh) {
+// function set_carte(carte, text, front_text, deck, from_mesh) {
 
-    carte.material = carte.material.clone()
-    carte.material.opacity = 1
+//     carte.material = carte.material.clone()
+//     carte.material.opacity = 1
 
-    add_text_to_mesh(carte, chunkArray(front_text.split(' '), 4).map(e => e.join(' ')).join('\n'), 0.1)
-    add_text_to_mesh(carte, deck.name, 0.1, 0xaaaaaa, -0.9, 0.9, null)
+//     add_text_to_mesh(carte, chunkArray(front_text.split(' '), 4).map(e => e.join(' ')).join('\n'), 0.1)
+//     add_text_to_mesh(carte, deck.name, 0.1, 0xaaaaaa, -0.9, 0.9, null)
 
-    set_movable(carte)
+//     set_movable(carte)
 
-    carte.addEventListener('click', async (evt) => {
-        if (evt.nb == 0) return
-        popup_carte(deck, text, carte, from_mesh, false)
-    })
-}
+//     carte.addEventListener('click', async (evt) => {
+//         if (evt.nb == 0) return
+//         popup_carte(deck, text, carte, from_mesh, false)
+//     })
+// }

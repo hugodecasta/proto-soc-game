@@ -83,7 +83,6 @@ export async function setup_game(session_code) {
         },
         // --------------------------------------------- DATA HANDLER
         (topic, data) => {
-            console.log('TOPIC:', topic, 'DATA:', data)
             if (topic == 'obj') {
                 const { id, position, rotation } = data
                 if (id == moving) return
