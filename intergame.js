@@ -3,7 +3,7 @@ import { listen_to } from "./vanille/components.js"
 
 export class INTER_GAME {
 
-    constructor(session_code, welcome, on_welcome, goodbye, on_goodbye, data_handler) {
+    constructor(session_code, welcome, on_welcome, goodbye, on_goodbye, init, data_handler) {
 
         return new Promise(async (ok) => {
 
@@ -20,7 +20,8 @@ export class INTER_GAME {
                     else {
                         data_handler(topic, data, journal_id)
                     }
-                }
+                },
+                init
             )
 
             const welcome_data = welcome()

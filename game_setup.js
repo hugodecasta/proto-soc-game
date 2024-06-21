@@ -4,10 +4,11 @@ import { TextGeometry } from 'three/addons/geometries/TextGeometry.js'
 import { FontLoader } from 'three/addons/loaders/FontLoader.js'
 import * as THREE from 'three'
 import { br, button, div, divfix, h1, h3, listen_to, popup_pop } from "./vanille/components.js"
-import { PLANCHE3D, load_planche, local_id_map } from "./planche_loader.js"
+import { PLANCHE3D, card_action, load_planche, local_id_map, pull_card, shuffle_cards } from "./planche_loader.js"
 import { connect_session } from "./interconnect.js"
 import { INTER_GAME } from "./intergame.js"
 import { DATABASE } from "./vanille/db_sytem/database.js"
+import { dice_event_handler, roll_dice } from "./dice.js"
 
 export function get_user_object() {
     const user_db = new DATABASE('service_courant_user', { user: null, color: null }, false)
@@ -81,8 +82,34 @@ export async function setup_game(session_code) {
         ({ user }) => {
             planch.remove_user(user)
         },
+        // --------------------------------------------- INIT
+        (journal) => {
+            console.log('INIT', journal)
+            if (!journal['seed']) {
+                console.log('send')
+                game.send_data(
+                    'seed',
+                    parseInt(Math.random() * 900 + 100),
+                    'seed'
+                )
+            }
+        },
         // --------------------------------------------- DATA HANDLER
         (topic, data) => {
+            if (topic == 'dice_roll') {
+                roll_dice()
+            }
+            if (topic == 'deck') {
+                const deck_name = data
+                pull_card(deck_name)
+            }
+            if (topic == 'card_action') {
+                const { deck_name, id, action } = data
+                card_action(deck_name, id, action)
+            }
+            if (topic == 'seed') {
+                shuffle_cards(data)
+            }
             if (topic == 'obj') {
                 const { id, position, rotation } = data
                 if (id == moving) return
@@ -113,6 +140,10 @@ export async function setup_game(session_code) {
         }
     )
 
+    function proxy_event(name) {
+        planch.addEventListener(name, (data) => game.send_data(name, data))
+    }
+
     let moving = null
     planch.addEventListener('obj', (evt) => {
         game.send_data('obj', JSON.parse(JSON.stringify((evt))), 'obj_' + evt.id)
@@ -135,6 +166,13 @@ export async function setup_game(session_code) {
         game.send_data('control', { user: user_data.user, control: false }, 'mouse_control_' + user_data.user)
     })
 
+
+    proxy_event('deck')
+    proxy_event('card_action')
+    planch.addEventListener('card_consult', (data) => {
+        game.send_data('card_consult', { user: user_data.user, ...data })
+    })
+
     let past_move = null
     setInterval(() => {
         const camera = planch.vp3d.camera
@@ -149,5 +187,7 @@ export async function setup_game(session_code) {
 
         past_move = pos_str
     }, 100)
+
+    dice_event_handler.addEventListener('roll', () => game.send_data('dice_roll', null))
 
 }

@@ -2,8 +2,9 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
 import { TextGeometry } from 'three/addons/geometries/TextGeometry.js'
 import { FontLoader } from 'three/addons/loaders/FontLoader.js'
 import * as THREE from 'three'
-import { EventHandler, button, div, h1, listen_to, popup_pop } from "./vanille/components.js"
+import { EventHandler, button, card, div, h1, h3, hr, listen_to, popup_pop } from "./vanille/components.js"
 import { iter_to_type, THREE_VIEWPORT } from './THREE_VIEWPORT.js'
+import { get_user_object } from './game_setup.js'
 
 window.adder = 1
 // ---------------------------------------------------------------------------------- PLANCH OBJECT
@@ -155,40 +156,52 @@ export class PLANCHE3D extends EventHandler {
 
 }
 
-// ---------------------------------------------------------------------------------- LOAD PLANCHE
+// ---------------------------------------------------------------------------------- DECK SHUFFLE
 
-let scene = null
-let font = null
-
-let decks = {}
+const decks = {}
 
 function handle_deck(name, deck) {
 
     let cards = Object.keys(deck.cards).map(card => Array(deck.cards[card]).fill(0).map(() => card))
         .reduce((a, b) => a.concat(b), [])
-    if (deck.shuffle) {
-        cards = cards.sort(() => Math.random() - 0.5)
+    decks[name] = {
+        name,
+        ...deck,
+        cards,
     }
-    decks[name] = cards
 }
+
+export let rng = null
+
+export function shuffle_cards(seed) {
+    rng = new Math.seedrandom(seed)
+    for (const deck of Object.values(decks)) {
+        if (deck.shuffle) {
+            deck.cards = deck.cards.sort(() => rng() - 0.5)
+        }
+    }
+}
+
+// ---------------------------------------------------------------------------------- LOAD PLANCHE
+
+let scene = null
+let font = null
 
 export async function load_planche() {
 
-    const decks_data = await (await fetch('decks.json')).json()
+    const decks_data = await (await fetch('game_data/decks.json')).json()
     Object.entries(decks_data).forEach((dat) => handle_deck(...dat))
-    console.log(decks)
 
     return new Promise(ok => {
         const loader = new FontLoader()
         loader.load('font/helvetiker_regular.json', (loaded_font) => {
             font = loaded_font
             const loader = new GLTFLoader()
-            loader.load('planche.glb',
+            loader.load('game_data/planche.glb',
                 function (gltf) {
                     gltf.scene.position.y += 5
                     iter_to_type(gltf.scene, null, setup_game_ids)
                     iter_to_type(gltf.scene, 'Mesh', setup_mesh)
-                    console.log(gltf.scene)
                     scene = gltf.scene
                     ok(gltf.scene)
                 },
@@ -232,14 +245,16 @@ window.addEventListener('mouseup', (evt) => {
 
 export const local_id_map = {}
 
-function setup_game_ids(obj, i) {
-    if (!obj.userData.game_id) {
-        obj.userData.game_id = (obj.parent?.userData?.game_id ?? 'INI') + '_' + i
-    }
+function set_game_id(obj, id) {
+    obj.userData.game_id = id
     global_planche.id_map[obj.userData.game_id] = {
         position: obj.position,
         rotation: obj.rotation,
     }
+}
+
+function setup_game_ids(obj, i) {
+    set_game_id(obj, (obj.parent?.userData?.game_id ?? 'INI') + '_' + i)
 }
 
 // ----------------------------------------------------------- ENTRY POINT
@@ -252,7 +267,7 @@ function setup_mesh(mesh, i) {
 
     if (mesh.userData.deck) {
         mesh.userData.nomove = true
-        set_deck(mesh)
+        set_deck(mesh.userData.deck, mesh)
     }
 
     if (mesh.userData.planche) {
@@ -360,38 +375,169 @@ function set_movable(mesh) {
 
 // }
 
-function set_deck(mesh) {
+function put_card_in_deck(deck, card_mesh, position) {
+    deck.cards.splice(position, 0, card_mesh.userData.content)
+    card_mesh.parent.remove(card_mesh)
+    delete global_planche.id_map[card_mesh.userData.game_id]
+}
+
+const card_actions = {
+    'reveal': (card_mesh, deck) => {
+        card_mesh.userData.hidden = false
+        update_table_card(deck, card_mesh)
+    },
+    'hide': (card_mesh, deck) => {
+        card_mesh.userData.hidden = true
+        update_table_card(deck, card_mesh)
+    },
+    'put in deck (TOP)': (card_mesh, deck) => {
+        put_card_in_deck(deck, card_mesh, 0)
+    },
+    'put in deck (BOTTOM)': (card_mesh, deck) => {
+        put_card_in_deck(deck, card_mesh, deck.length)
+    },
+    'put in deck (SOMEWHERE)': (card_mesh, deck) => {
+        put_card_in_deck(deck, card_mesh, parseInt(rng() * (deck.cards.length + 1)))
+    },
+}
+
+export function card_action(deck_name, card_id, action) {
+    const deck = decks[deck_name]
+    const card_mesh = deck.table[card_id]
+    card_actions[action](card_mesh, deck)
+}
+
+function update_table_card(deck, card_mesh) {
+    card_mesh.children.filter(c => c.geometry.type == "TextGeometry").forEach(t => card_mesh.remove(t))
+    const hidden = card_mesh.userData.hidden
+    if (hidden) {
+        add_text_to_mesh(card_mesh, '(hidden)', 0.2, 0x666666)
+    }
+    else {
+        add_text_to_mesh(card_mesh, chunkArray(card_mesh.userData.content.split(' '), 4).map(e => e.join(' ')).join('\n'), 0.12)
+    }
+    add_text_to_mesh(card_mesh, deck.name, 0.1, 0xaaaaaa, -0.9, 0.9, null)
+}
+
+function setup_card_click(deck, card_mesh) {
+
+    card_mesh.addEventListener('click', async (evt) => {
+        if (!evt.ctrlKey || evt.nb != 0) return
+
+        const actions = [
+            card_mesh.userData.hidden ? 'reveal' : 'hide',
+            'put in deck (TOP)',
+            'put in deck (BOTTOM)',
+            'put in deck (SOMEWHERE)',
+        ]
+
+        const action = await popup_pop(
+            div().add(h3(deck.name + ' - card')).set_style({ color: ' #000' }),
+            () => { },
+            (ok) => div().add(
+                button('consult', () => ok('consult')),
+                hr(),
+                ...actions.map(a => button(a, () => ok(a))),
+                hr(),
+                button('cancel', () => ok(null))
+            )
+        )
+
+        if (!action) return
+        if (action == 'consult') {
+            popup_pop(
+                div().add(
+                    h3(deck.name + ' - card'),
+                    card_mesh.userData.content
+                ).set_style({ color: ' #000' }),
+                () => { },
+            )
+            global_planche.trigger_event('card_consult', { deck_name: deck.name })
+            return
+        }
+
+        global_planche.trigger_event('card_action', { deck_name: deck.name, id: card_mesh.userData.game_id, action })
+
+    })
 
 }
 
-// function add_text_to_mesh(mesh, text, size, color = null, x = null, y = null, z = null) {
-//     const text_mesh = new THREE.Mesh(
-//         new TextGeometry(text, {
-//             font,
-//             size: size,
-//             height: 0.01,
-//             curveSegments: 1,
-//             bevelEnabled: false,
-//         }),
-//         new THREE.MeshBasicMaterial({ color: color ?? 0x000000 }),
-//     )
-//     text_mesh.geometry.computeBoundingBox()
-//     const centerOffset = -0.5 * (text_mesh.geometry.boundingBox.max.x - text_mesh.geometry.boundingBox.min.x)
-//     text_mesh.position.set(x ?? centerOffset, y ?? 0, z ?? 1)
-//     text_mesh.scale.set(1 / mesh.scale.x, 1 / mesh.scale.y, 1)
-//     mesh.add(text_mesh)
-// }
+export function pull_card(deck_name) {
+    const deck = decks[deck_name]
+    deck.card_count ??= 0
+    deck.table ??= {}
 
-// function chunkArray(array, n) {
-//     if (n <= 0) {
-//         throw new Error("n must be a positive integer")
-//     }
-//     const result = []
-//     for (let i = 0; i < array.length; i += n) {
-//         result.push(array.slice(i, i + n))
-//     }
-//     return result
-// }
+    const card_content = deck.cards.shift()
+
+    const card_mesh = deck.mesh.clone()
+    card_mesh.scale.z /= 10
+    card_mesh.position.y -= 5
+    card_mesh.position.x += 0.1
+
+    card_mesh.userData.hidden = true
+    card_mesh.userData.content = card_content
+    update_table_card(deck, card_mesh)
+
+    const card_id = 'card_' + deck_name + '_' + deck.card_count
+    deck.card_count++
+    set_game_id(card_mesh, card_id)
+    deck.table[card_id] = card_mesh
+
+    set_movable(card_mesh)
+
+    scene.add(card_mesh)
+
+    setup_card_click(deck, card_mesh)
+
+}
+
+function set_deck(deck_name, mesh) {
+
+    decks[deck_name].mesh = mesh
+
+    add_text_to_mesh(mesh, deck_name, 0.2)
+
+    mesh.addEventListener('click', (evt) => {
+        if (!evt.ctrlKey || evt.nb != 0) return
+        global_planche.trigger_event('deck', deck_name)
+    })
+
+    listen_to(() => decks[deck_name].mesh, () => {
+        mesh.material.opacity = decks[deck_name].cards.length == 0 ? 0.5 : 1
+    })
+
+}
+
+// ----------------------------------------------------------- MESH TEXT
+
+function add_text_to_mesh(mesh, text, size, color = null, x = null, y = null, z = null) {
+    const text_mesh = new THREE.Mesh(
+        new TextGeometry(text, {
+            font,
+            size: size,
+            height: 0.01,
+            curveSegments: 1,
+            bevelEnabled: false,
+        }),
+        new THREE.MeshBasicMaterial({ color: color ?? 0x000000 }),
+    )
+    text_mesh.geometry.computeBoundingBox()
+    const centerOffset = -0.5 * (text_mesh.geometry.boundingBox.max.x - text_mesh.geometry.boundingBox.min.x)
+    text_mesh.position.set(x ?? centerOffset, y ?? 0, z ?? 1)
+    text_mesh.scale.set(1 / mesh.scale.x, 1 / mesh.scale.y, 1)
+    mesh.add(text_mesh)
+}
+
+function chunkArray(array, n) {
+    if (n <= 0) {
+        throw new Error("n must be a positive integer")
+    }
+    const result = []
+    for (let i = 0; i < array.length; i += n) {
+        result.push(array.slice(i, i + n))
+    }
+    return result
+}
 
 // const out_type = {
 //     ouvert: 1,
@@ -485,7 +631,6 @@ function set_deck(mesh) {
 //         new_carte.remove(new_carte.children.find(c => c.geometry.type == "TextGeometry"))
 
 //         scene.add(new_carte)
-//         console.log(new_carte)
 
 //         set_carte(new_carte, text, front_text, deck, from_mesh)
 //     }

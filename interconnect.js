@@ -1,6 +1,6 @@
 const socket = io('https://intersocket.hugocastaneda.fr')
 
-export function connect_session(session_code, on_journal_data) {
+export function connect_session(session_code, on_journal_data, init) {
 
     function session_topic(topic) {
         return 'session_' + session_code + '_' + topic
@@ -15,7 +15,7 @@ export function connect_session(session_code, on_journal_data) {
     // ----------------------------------------------------------- ON JOURNAL
 
     socket.on(session_topic('journal'), (journal) => {
-        console.log('JOURNAL', journal)
+        init(journal)
         for (const journal_id in journal) {
             on_journal_data(journal_id, journal[journal_id])
         }
