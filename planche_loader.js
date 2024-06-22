@@ -2,7 +2,7 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
 import { TextGeometry } from 'three/addons/geometries/TextGeometry.js'
 import { FontLoader } from 'three/addons/loaders/FontLoader.js'
 import * as THREE from 'three'
-import { EventHandler, button, card, div, h1, h3, hr, listen_to, popup_pop } from "./vanille/components.js"
+import { EventHandler, button, card, div, divrel, h1, h3, hr, listen_to, p, popup_pop } from "./vanille/components.js"
 import { iter_to_type, THREE_VIEWPORT } from './THREE_VIEWPORT.js'
 import { get_user_object } from './game_setup.js'
 
@@ -410,13 +410,33 @@ export function card_action(deck_name, card_id, action) {
 function update_table_card(deck, card_mesh) {
     card_mesh.children.filter(c => c.geometry.type == "TextGeometry").forEach(t => card_mesh.remove(t))
     const hidden = card_mesh.userData.hidden
-    if (hidden) {
-        add_text_to_mesh(card_mesh, '(hidden)', 0.2, 0x666666)
-    }
-    else {
-        add_text_to_mesh(card_mesh, chunkArray(card_mesh.userData.content.split(' '), 4).map(e => e.join(' ')).join('\n'), 0.12)
-    }
-    add_text_to_mesh(card_mesh, deck.name, 0.1, 0xaaaaaa, -0.9, 0.9, null)
+
+    const card_div = divrel().set_style({
+        width: '100%',
+        height: '100%',
+    }).add(
+        h1(deck.name).set_style({
+            color: '#000', opacity: 0.5,
+            margin: '20px',
+        }),
+        hidden ? h1('HIDDEN').set_style({
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            fontSize: '40px',
+            margin: '0px',
+            color: '#000',
+            opacity: 0.3
+        }) : p(card_mesh.userData.content.replace(/\n/g, '</br>')).set_style({
+            margin: '30px',
+            color: '#000',
+        }).set_style({
+            fontSize: '23px'
+        })
+    )
+
+    add_text_to_mesh(card_mesh, card_div)
 }
 
 function setup_card_click(deck, card_mesh) {
@@ -462,7 +482,7 @@ function setup_card_click(deck, card_mesh) {
 
 }
 
-export function pull_card(deck_name) {
+export function pull_card(deck_name, hidden) {
     const deck = decks[deck_name]
     deck.card_count ??= 0
     deck.table ??= {}
@@ -471,10 +491,10 @@ export function pull_card(deck_name) {
 
     const card_mesh = deck.mesh.clone()
     card_mesh.scale.z /= 10
-    card_mesh.position.y -= 5
-    card_mesh.position.x += 0.1
+    card_mesh.position.y -= 2.5
+    card_mesh.position.x += parseInt(rng() * 0.5) - 0.25
 
-    card_mesh.userData.hidden = true
+    card_mesh.userData.hidden = hidden
     card_mesh.userData.content = card_content
     update_table_card(deck, card_mesh)
 
@@ -495,11 +515,22 @@ function set_deck(deck_name, mesh) {
 
     decks[deck_name].mesh = mesh
 
-    add_text_to_mesh(mesh, deck_name, 0.2)
+    add_text_to_mesh(mesh,
+        h1(deck_name.toUpperCase()).set_style({
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            fontSize: '40px',
+            margin: '0px',
+            color: '#000'
+        })
+    )
 
     mesh.addEventListener('click', (evt) => {
         if (!evt.ctrlKey || evt.nb != 0) return
-        global_planche.trigger_event('deck', deck_name)
+        const hidden = !evt.shiftKey
+        global_planche.trigger_event('deck', { deck_name, hidden })
     })
 
     listen_to(() => decks[deck_name].mesh, () => {
@@ -510,22 +541,22 @@ function set_deck(deck_name, mesh) {
 
 // ----------------------------------------------------------- MESH TEXT
 
-function add_text_to_mesh(mesh, text, size, color = null, x = null, y = null, z = null) {
-    const text_mesh = new THREE.Mesh(
-        new TextGeometry(text, {
-            font,
-            size: size,
-            height: 0.01,
-            curveSegments: 1,
-            bevelEnabled: false,
-        }),
-        new THREE.MeshBasicMaterial({ color: color ?? 0x000000 }),
-    )
-    text_mesh.geometry.computeBoundingBox()
-    const centerOffset = -0.5 * (text_mesh.geometry.boundingBox.max.x - text_mesh.geometry.boundingBox.min.x)
-    text_mesh.position.set(x ?? centerOffset, y ?? 0, z ?? 1)
-    text_mesh.scale.set(1 / mesh.scale.x, 1 / mesh.scale.y, 1)
-    mesh.add(text_mesh)
+function add_text_to_mesh(mesh, inner_div) {
+    mesh.userData.color ??= mesh.material.color.getHexString()
+    const d = divrel().add2b().add(inner_div).set_style({
+        width: '300px',
+        height: 300 * 1.54 + 'px',
+        background: '#' + mesh.userData.color,
+        zIndex: -10000000
+    })
+    html2canvas(d, {
+        onrendered: function (canvas) {
+            d.remove()
+            const texture = new THREE.Texture(canvas)
+            texture.needsUpdate = true
+            mesh.material = new THREE.MeshStandardMaterial({ map: texture })
+        }
+    })
 }
 
 function chunkArray(array, n) {

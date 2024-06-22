@@ -97,11 +97,11 @@ export async function setup_game(session_code) {
         // --------------------------------------------- DATA HANDLER
         (topic, data) => {
             if (topic == 'dice_roll') {
-                roll_dice()
+                roll_dice(data)
             }
             if (topic == 'deck') {
-                const deck_name = data
-                pull_card(deck_name)
+                const { deck_name, hidden } = data
+                pull_card(deck_name, hidden)
             }
             if (topic == 'card_action') {
                 const { deck_name, id, action } = data
@@ -140,8 +140,8 @@ export async function setup_game(session_code) {
         }
     )
 
-    function proxy_event(name) {
-        planch.addEventListener(name, (data) => game.send_data(name, data))
+    function proxy_event(name, fromeh = planch, id = null) {
+        fromeh.addEventListener(name, (data) => game.send_data(name, data, id))
     }
 
     let moving = null
@@ -188,6 +188,6 @@ export async function setup_game(session_code) {
         past_move = pos_str
     }, 100)
 
-    dice_event_handler.addEventListener('roll', () => game.send_data('dice_roll', null))
+    proxy_event('dice_roll', dice_event_handler, 'dice_roll')
 
 }

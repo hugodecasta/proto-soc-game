@@ -1,9 +1,9 @@
 {
-    "mission": {
+    "missions": {
         "shuffle": true,
         "cards": {
-            "Récolter des informations sous-marine en [A,B]": 3,
-            "On signal un bateau en dresse en [A,B]\nrendez-vous sur les lieux, détecter le bateau (assurez vous qu'il s'agisse bien de lui une fois sur la case (6=non) et secourez le avec le zodiak": 3,
+            "Renseignement sous-marins [A,B]": 3,
+            "Sauvetage en mer en [A,B]": 3,
             "Sécuriser la zone [A,B]": 3
         }
     },
@@ -35,10 +35,9 @@
     "distance": {
         "shuffle": true,
         "cards": {
-            "1M": 4,
-            "2M": 4,
-            "3M": 4,
-            "4M": 4
+            "4M": 4,
+            "6M": 4,
+            "8M": 4
         }
     },
     "cap": {
@@ -57,9 +56,9 @@
     "detections": {
         "shuffle": true,
         "cards": {
-            "Se rapproche de vous a chaque tour de 2M\nP: missile, I:bateau": 4,
-            "Reste sur place\nP: Homme a la mer, I: bateau": 4,
-            "Mouvement aleatoire (tirer cap + 1M)\nP: missile, I:bateau": 4
+            "Se rapproche de vous a chaque tour de 1M\n\n1,2,3: missile\n4,5,6:bateau": 4,
+            "Reste sur place\n\n1,2,3: Homme a la mer\n4,5,6: bateau": 4,
+            "Mouvement aleatoire (tirer cap + 1M)\n\n1,2,3: missile\n4,5,6:bateau": 4
         }
     },
     "vent": {

@@ -15,11 +15,14 @@ const dice_div = divfix().add2b().set_style({
 
 export const dice_event_handler = new EventHandler()
 
-dice_div.addEventListener('click', () => dice_event_handler.trigger_event('roll'))
+dice_div.addEventListener('click', () => {
+    const number = parseInt(Math.random() * 6) + 1
+    dice_event_handler.trigger_event('dice_roll', number)
+})
 
 
-export function roll_dice() {
-    const number = Math.floor(rng() * 6) + 1
+export function roll_dice(number) {
+    // const number = Math.floor(rng() * 6) + 1
     dice_div.clear()
     dice_div.add(number)
     dice_div.set_style({
