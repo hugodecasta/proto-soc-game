@@ -191,18 +191,38 @@ C'est le commandant en personne ou l'Amiral le cas échéant qui remet les méda
         - réussite: immediate
         - effet: attacher les amarres
 
+    - 🛞 **Planifier la route**
+        - Lieu: Salle des cartes
+        - Personnel: COMANAV, CDT
+        - réussite: immediate
+        - effet: ajouter un point "route" dans la salle des cartes
+
     - 🛞 **Mouvements machine**
+        - context: il exist au moins un point route dans la salle des cartes
         - Lieu: Passerelle
         - Personnel: COMANAV, MOTNAV(2)
         - réussite: immediate
         - effet: modifier les commandes régime et/ou barre.
-
 
     - 🔍 **Veille Nautique**
         - Lieu: Passerelle
         - Personnel: COMANAV, MOTNAV(1)
         - réussite: 1,2,3
         - effet: Dévoiler la détection a 1 case de carte.
+
+    - ⚓ **Mouiller**
+        - context: ancre levée
+        - Lieu: Plage avant
+        - Personnel: CDT, COMANAV, MOTNAV(1)
+        - réussite: immediatte
+        - effet: L'ancre est mise à la mer.
+
+    - ⚓ **Lever l'ancre**
+        - context: ancre jetée
+        - Lieu: Plage avant
+        - Personnel: CDT, COMANAV, MOTNAV(1)
+        - réussite: immediatte
+        - effet: L'ancre est levée.
 
  - COMAOP:
     - 📡 **OP Détection** (détecter un objet en mer)
@@ -370,7 +390,7 @@ Récupérer une rescapé à la mer loin (pas dans [AB]) en utilisant l'hélicopt
 ## 💥 Collision avec les détections
 
 Un local qui prend feu c'est du personnel qui disparait.
-Un local qui prend feu c'est 1 feu + n feu pour n essence. Si héliport et que l'hélicoptère est chargé d'essence, l'héliport prend n feu pour n essence dans l'hélicoptère.
+Un local qui prend feu c'est 1 feu + n feu pour n essence. Si héliport et que l'hélicoptère est chargé d'essence, l'héliport prend n feu pour n essence dans l'hélicoptère. Si plus de 7 feux sur un local (parce qu'explosion), 7 feu se transforme en local détruit et le reste est réparti equitablement sur les locaux voisin à tirer au dés en cas de non équilibre.
 
  - 🧨 **Missile**: Une collision avec un missile entrain un incendie sur le bord.
     - A l'avant: la plage avant et la passerelle sont touchées.

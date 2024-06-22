@@ -56,9 +56,11 @@
     "detections": {
         "shuffle": true,
         "cards": {
-            "Se rapproche de vous a chaque tour de 1M\n\n1,2,3: missile\n4,5,6:bateau": 4,
-            "Reste sur place\n\n1,2,3: Homme a la mer\n4,5,6: bateau": 4,
-            "Mouvement aleatoire (tirer cap + 1M)\n\n1,2,3: missile\n4,5,6:bateau": 4
+            "Se rapproche de vous a chaque tour de 1M\n\n1,2,3: missile\n4,5,6:bateau": 3,
+            "Se rapproche de vous a chaque tour de 3M\n\n1,2,3,4: missile\n5,6:bateau": 3,
+            "Reste sur place\n\n1,2,3: Homme a la mer\n4,5,6: bateau": 3,
+            "Mouvement aleatoire (tirer cap + 1M)\n\n1,2,3: missile\n4,5,6:bateau": 3,
+            "Mouvement aleatoire (tirer cap + 2M)\n\n1,2,3,4: missile\n5,6:bateau": 3
         }
     },
     "vent": {

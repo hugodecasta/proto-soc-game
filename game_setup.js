@@ -75,7 +75,7 @@ export async function setup_game(session_code) {
             return user_data
         },
         ({ user, color }) => {
-            planch.update_user(user, color, 0, 0, false)
+            planch.update_user(user, color, 0, 0, false, null, user == user_data.user)
         },
         // --------------------------------------------- GOODBYE
         () => ({ user: user_data.user }),
@@ -123,19 +123,19 @@ export async function setup_game(session_code) {
             if (topic == 'mouse') {
                 const { user, x, y } = data
                 // if (user == user_data.user) return
-                planch.update_user(user, null, x, y, true)
+                planch.update_user(user, null, x, y, true, null, user == user_data.user)
             }
             if (topic == 'user_pos') {
                 let { user, cam_pos, tar_pos } = data
                 if (user == user_data.user) {
                     cam_pos = { x: -1000, y: -1000, z: -1000 }
                 }
-                planch.update_user(user, null, null, null, null, { cam_pos, tar_pos })
+                planch.update_user(user, null, null, null, null, { cam_pos, tar_pos }, user == user_data.user)
             }
             if (topic == 'control') {
                 const { user, control } = data
                 // if (user == user_data.user) return
-                planch.update_user(user, null, null, null, control)
+                planch.update_user(user, null, null, null, control, null, user == user_data.user)
             }
         }
     )

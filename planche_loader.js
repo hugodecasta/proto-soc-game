@@ -79,13 +79,13 @@ export class PLANCHE3D extends EventHandler {
         })))
     }
 
-    update_user(user, color, x, y, show, camera_data) {
+    update_user(user, color, x, y, show, camera_data, is_me = false) {
         if (!this.users[user]) {
 
             const material = new THREE.MeshStandardMaterial({
                 color: 0xffffff,
                 transparent: true,
-                opacity: 0.5,
+                opacity: is_me ? 0.01 : 0.5,
                 emissive: new THREE.Color(color),
                 emissiveIntensity: 10
             })
