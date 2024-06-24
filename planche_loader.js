@@ -326,7 +326,7 @@ function set_planche(mesh) {
                 x: diffx,
                 y: diffy,
             }
-            const restricted = (got_mesh.userData.restrict ?? '').split(',')
+            const restricted = (got_mesh.userData.restrict ?? '').split(',').filter(e => e)
             console.log(restricted)
             for (const comp in components) {
                 if (restricted.length && !restricted.includes(comp)) continue
