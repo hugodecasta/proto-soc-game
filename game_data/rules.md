@@ -102,11 +102,14 @@ Les discussions ont lieux entre le CDT et les différents services pour s'assure
 
 #### 🤖 Actions automatiques
 
- - 🔥 **Incendie**. Ajouter 1 feu sur chaque locaux incendiés. Si un local possède 6 feux, désigner par des chiffres de 1 à 5 maximum les locaux adjacents non incendiés, tirer au dés, le chiffre indique le local qui prend feu, y placer 1 feu. Si un local possède 7 feu, le local est détruit, retirer les feux et placer l'indicateur d'inaccessibilité. Si 7 locaux sont détruits, le navire coule et son équipage avec, seuls sont sauvé le personnel en mer à bord de l'hélicoptère et du zodiak (si ils sont en mer).
-
  - 🛞 **Navigation**.
     - Si les amarres sont largués et que l'ancre est relevée, placer les jetons de déplacement au niveau de l'indicateur (fourche rouge). Avancer l'indicateur de 1/2 pat en direction de la commande (fourche verte). **ATTENTION** si le local machine est incendié, l'indicateur (rouge) ne bouge pas.
     - Si les amarres sont largués et que l'ancre est relevée, déplacer le navire à l'aide des règles rosasses (selon les indications de la barre et du régime moteur).
+
+ - 🔥 **Incendie**. Ajouter 1 feu sur chaque locaux incendiés. Si un local possède 6 feux, désigner par des chiffres de 1 à 5 maximum les locaux adjacents non incendiés, tirer au dés, le chiffre indique le local qui prend feu, y placer 1 feu. Si un local possède 7 feu, le local est détruit, retirer les feux et placer l'indicateur d'inaccessibilité. Si 7 locaux sont détruits, le navire coule et son équipage avec, seuls sont sauvé le personnel en mer à bord de l'hélicoptère et du zodiak (si ils sont en mer).
+
+ - 🚪 **Portes**.
+    - Si la porte de l'héliport est ouverte et que le navire passe en régime speed et/ou barre bab ou tri toute, le hangard est inondé et prend instantanément feu avec ses conséquences. Idem pour la porte du zodiak.
 
  - 📡 **Détections**. Bouger les détection selon le comportement établi sur leurs cartes détections. Si les détections entrent en collision se réferer à la partie collision.
 
@@ -253,17 +256,17 @@ C'est le commandant en personne ou l'Amiral le cas échéant qui remet les méda
         - réussite: 1,2,3,4,5 (si calib sinon 1,2,3) au dés (SICPN)
         - conséquence: tir de missile Exocet (avant du navire). Le missile se transform en détection en direction de la détection ciblée
 
-    - 🔫 **Ouverture porte héliport**
+    - 🚪 **Ouverture porte héliport** (idem pour porte zodiak)
         - context: Porte héliport fermée, régime max slow, barre à mid
-        - Lieu: CO.T
-        - Personnel: COMAOP, MOTOP(1)
+        - Lieu: CO.T + hangard hélicoptère
+        - Personnel: COMAOP, MOTOP(1) + MOTOP(1) hangard
         - réussite: 1,2,3,4,5 au dés (SICPN)
         - conséquence: porte héliport ouverte
 
-    - 🔫 **Fermeture porte héliport**
+    - 🚪 **Fermeture porte héliport** (idem pour porte zodiak)
         - context: Porte héliport ouverte, régime max slow, barre à mid
-        - Lieu: CO.T
-        - Personnel: COMAOP, MOTOP(1)
+        - Lieu: CO.T + hangard hélicoptère
+        - Personnel: COMAOP, MOTOP(1) + MOTOP(1) hangard
         - réussite: 1,2,3,4,5 au dés (SICPN)
         - conséquence: porte héliport ouverte
 
