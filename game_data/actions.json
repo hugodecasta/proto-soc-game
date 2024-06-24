@@ -1,0 +1,480 @@
+{
+    "CDT": [
+        {
+            "name": "Recevoir Renseignements",
+            "requirement": null,
+            "personel": {
+                "CO.C": [
+                    "CDT",
+                    "COMAOP",
+                    "MOTOP(1)"
+                ]
+            },
+            "success": null,
+            "effect": "selon le contexte de l'action, tirer une carte mission, ou ajouter les points mission (si l'action demandée par la mission)"
+        },
+        {
+            "name": "Changement de posture du navire",
+            "requirement": null,
+            "personel": {
+                "CO.C": [
+                    "CDT",
+                    "COMAOP",
+                    "MOTOP(1)"
+                ]
+            },
+            "success": null,
+            "effect": "selon le contexte de l'action, tirer une carte mission, ou ajouter les points mission (si l'action demandée par la mission)"
+        }
+    ],
+    "COMANAV": [
+        {
+            "name": "larguer les amarres",
+            "requirement": null,
+            "personel": {
+                "Plage": [
+                    "CDT",
+                    "COMANAV",
+                    "MOTNAV(3)"
+                ]
+            },
+            "success": null,
+            "effect": "retirer les amarres"
+        },
+        {
+            "name": "Amarrer",
+            "requirement": null,
+            "personel": {
+                "Plage": [
+                    "CDT",
+                    "COMANAV",
+                    "MOTNAV(3)"
+                ]
+            },
+            "success": null,
+            "effect": "Attacher les amarres"
+        },
+        {
+            "name": "Planifier la route",
+            "requirement": null,
+            "personel": {
+                "Cartes": [
+                    "CDT",
+                    "COMANAV"
+                ]
+            },
+            "success": null,
+            "effect": "Ajouter un point route à la passerelle"
+        },
+        {
+            "name": "Mouvement Machine",
+            "requirement": "au moins 1 point route à la passerelle",
+            "personel": {
+                "Passerelle": [
+                    "COMANAV",
+                    "MOTNAV(2)"
+                ]
+            },
+            "success": null,
+            "effect": "Modifier les commandes (x1 / x2) et retirer un point route de la passerelle"
+        },
+        {
+            "name": "Veille Nautique",
+            "requirement": "Détection à 1 case carte près",
+            "personel": {
+                "Passerelle": [
+                    "COMANAV",
+                    "MOTNAV(1)"
+                ]
+            },
+            "success": {
+                "normal": [
+                    1,
+                    2,
+                    3
+                ]
+            },
+            "effect": "Dévoiler la détection à 1 case carte près"
+        },
+        {
+            "name": "Mouiller",
+            "requirement": "Ancre levée",
+            "personel": {
+                "Plage avant": [
+                    "CDT",
+                    "COMANAV",
+                    "MOTNAV(1)"
+                ]
+            },
+            "success": null,
+            "effect": "Ancre à la mer"
+        },
+        {
+            "name": "Lever l'ancre",
+            "requirement": "Ancre à la mer",
+            "personel": {
+                "Plage avant": [
+                    "CDT",
+                    "COMANAV",
+                    "MOTNAV(1)"
+                ]
+            },
+            "success": null,
+            "effect": "Ancre levée"
+        }
+    ],
+    "COMAOP": [
+        {
+            "name": "OP Détection",
+            "personel": {
+                "CO.D": [
+                    "COMAOP",
+                    "MOTOP(1)"
+                ]
+            },
+            "success": {
+                "normal": [
+                    5,
+                    6
+                ]
+            },
+            "effect": "Tirer les cartes CAP/Distance pour placer la détection sur la carte. Si les coordonnées se trouvent sur la terre, annuler la détection. Tirer une carte détection pour connaitre le comportement de la détection. Placer la carte détection sur l'espace détection choisi pour représenter la détection."
+        },
+        {
+            "name": "Détection de menace",
+            "requirement": "Détection à la mer",
+            "personel": {
+                "CO.D": [
+                    "CDT",
+                    "COMAOP",
+                    "MOTOP(1)"
+                ]
+            },
+            "success": {
+                "normal": [
+                    1,
+                    2,
+                    3,
+                    4
+                ]
+            },
+            "effect": "Tirer au dés pour déterminer la nature de la détection selon les règles inscrites sur la carte détection correspondante."
+        },
+        {
+            "name": "Calibration du tir",
+            "requirement": "Détection (dévoilée ou pas) à la mer",
+            "personel": {
+                "CO.T": [
+                    "CDT",
+                    "COMAOP",
+                    "MOTOP(1)"
+                ]
+            },
+            "success": {
+                "normal": [
+                    1,
+                    2,
+                    3,
+                    4
+                ]
+            },
+            "effect": "Cible établie sur la détection"
+        },
+        {
+            "name": "Tir Exocet",
+            "personel": {
+                "CO.T": [
+                    "CDT",
+                    "COMAOP",
+                    "MOTOP(2)"
+                ]
+            },
+            "success": {
+                "tir calibré": [
+                    1,
+                    2,
+                    3,
+                    4,
+                    5
+                ],
+                "tir non-calibré": [
+                    1,
+                    2,
+                    3
+                ]
+            },
+            "effect": "Tir du missile. Le missile se transforme en détecton dévloiée exoceten direction de sa cible."
+        },
+        {
+            "name": "Ouverture porte héliport (idem pour zodiak)",
+            "requirement": "Porte héliport fermée + navire régmine < slow + navire barre mid ou 1/2",
+            "personel": {
+                "CO.C": [
+                    "COMAOP",
+                    "MOTOP(1)"
+                ],
+                "hangard_helico": [
+                    "MOTOP(1)"
+                ]
+            },
+            "success": null,
+            "effect": "Ouverture de la porte du héliport"
+        },
+        {
+            "name": "Fermeture porte héliport (idem pour zodiak)",
+            "requirement": "Porte héliport ouverte",
+            "personel": {
+                "CO.C": [
+                    "COMAOP",
+                    "MOTOP(1)"
+                ],
+                "hangard_helico": [
+                    "MOTOP(1)"
+                ]
+            },
+            "success": null,
+            "effect": "Fermeture de la porte du héliport"
+        }
+    ],
+    "COMAFUS": [
+        {
+            "name": "Mise à l'eau du zodiak",
+            "requirement": "zodiak à bord",
+            "personel": {
+                "hangard_zodiak": [
+                    "CDT",
+                    "MOTFUS(2)"
+                ],
+                "zodiak": [
+                    "COMAFUS",
+                    "MOTFUS(2)"
+                ]
+            },
+            "success": null,
+            "effect": "Zodiak à la mer"
+        },
+        {
+            "name": "Remontée du zodiak",
+            "requirement": "zodiak à la mer",
+            "personel": {
+                "hangard_zodiak": [
+                    "CDT",
+                    "MOTFUS(2)"
+                ],
+                "zodiak": [
+                    "COMAFUS",
+                    "MOTFUS(2)"
+                ]
+            },
+            "success": null,
+            "effect": "Zodiak à bord"
+        },
+        {
+            "name": "Approvisionnement du zodiak",
+            "requirement": "Zodiak à bord",
+            "personel": {
+                "hangard_zodiak": [
+                    "MOTFUS(1-2)"
+                ]
+            },
+            "success": null,
+            "effect": "Place 1 essence dans le réserve du zosiak"
+        },
+        {
+            "name": "Récupérer le rescapé (zodiak)",
+            "requirement": "Zodiak à la mer + Rescapé sur la même case carte que le navire",
+            "personel": {
+                "zodiak": [
+                    "COMAFUS",
+                    "MOTFUS(2)"
+                ]
+            },
+            "success": {
+                "normal": [
+                    1,
+                    2,
+                    3,
+                    4,
+                    5
+                ]
+            },
+            "effect": "Placer les rescapés dans le zodiak selon les places"
+        },
+        {
+            "name": "Récupérer le rescapé (hélico)",
+            "requirement": "Hélicoptère à la mer + Rescapé à 2 cases max du navire",
+            "personel": {
+                "helico": [
+                    "COMAFUS",
+                    "MOTFUS(1)"
+                ]
+            },
+            "success": {
+                "normal": [
+                    1,
+                    2,
+                    3
+                ]
+            },
+            "effect": "Placer les rescapés dans l'hélicoptère selon les places"
+        },
+        {
+            "name": "Transmission de renseignements",
+            "requirement": "hélicoptère à la mer",
+            "personel": {
+                "CO.C": [
+                    "CDT",
+                    "COMAOP",
+                    "MOTOP(1)"
+                ],
+                "hélicoptère": [
+                    "COMAFUS",
+                    "MOTFUS(1)"
+                ]
+            },
+            "success": {
+                "normal": [
+                    1,
+                    2,
+                    3,
+                    4
+                ]
+            },
+            "effect": "Renseignement obtenu"
+        },
+        {
+            "name": "Tires de semonce",
+            "requirement": "Détection dévoilée comme bateau",
+            "personel": {
+                "Canon": [
+                    "COMAFUS",
+                    "MOTFUS(1)"
+                ]
+            },
+            "success": {
+                "normal": [
+                    1,
+                    2,
+                    3,
+                    4
+                ]
+            },
+            "effect": "Le bateau est écarté"
+        },
+        {
+            "name": "Décollage de l'hélicoptère",
+            "requirement": "Hélicoptère sur l'héliport",
+            "personel": {
+                "heliport": [
+                    "CDT",
+                    "COMAVIA",
+                    "MOTAVIA(2)"
+                ],
+                "hélicoptère": [
+                    "COMAFUS",
+                    "MOTFUS(1)"
+                ]
+            },
+            "success": null,
+            "effect": "Hélicoptère à la mer"
+        },
+        {
+            "name": "Apontage de l'hélicoptère",
+            "requirement": "hélicoptère à la mer",
+            "personel": {
+                "heliport": [
+                    "CDT",
+                    "COMAVIA",
+                    "MOTAVIA(2)"
+                ],
+                "hélicoptère": [
+                    "COMAFUS",
+                    "MOTFUS(1)"
+                ]
+            },
+            "success": null,
+            "effect": "Hélicoptère sur l'héliport"
+        }
+    ],
+    "COMAVIA": [
+        {
+            "name": "Approvisionnement de l'hélicoptère",
+            "requirement": "hélicoptère dans le hangard",
+            "personel": {
+                "hangard_helico": [
+                    "MOTAVIA(1-2)"
+                ]
+            },
+            "success": null,
+            "effect": "Place 1 essence dans le réserve de l'hélicoptère"
+        },
+        {
+            "name": "Sortir l'hélicoptère",
+            "requirement": "hélicoptère dans le hangard + porte héliport ouverte",
+            "personel": {
+                "hangard_helico": [
+                    "MOTAVIA(2)"
+                ],
+                "héliport": [
+                    "CDT",
+                    "COMAVIA",
+                    "MOTAVIA(2)"
+                ]
+            },
+            "success": null,
+            "effect": "Hélicoptère sur l'héliport"
+        },
+        {
+            "name": "Rentrer l'hélicoptère",
+            "requirement": "hélicoptère sur l'héliport + porte héliport ouverte",
+            "personel": {
+                "hangard_helico": [
+                    "CDT",
+                    "COMAVIA",
+                    "MOTAVIA(2)"
+                ],
+                "héliport": [
+                    "MOTAVIA(2)"
+                ]
+            },
+            "success": null,
+            "effect": "Hélicoptère dans le hangard"
+        },
+        {
+            "name": "Préparation des pompier lourds",
+            "requirement": "MOTs dans le local pompiers",
+            "personel": {
+                "pompier": [
+                    "COMAVIA",
+                    "MOT(1-5)"
+                ]
+            },
+            "success": null,
+            "effect": "Matelot en pompiers lourds"
+        }
+    ],
+    "Pompiers lourds": [
+        {
+            "name": "Eteindre le feu",
+            "requirement": "se trouver dans un local enflamé",
+            "personel": {
+                "local": [
+                    "MOTs"
+                ]
+            },
+            "success": {
+                "équipé": [
+                    1,
+                    2,
+                    3,
+                    4
+                ],
+                "non équipé": [
+                    1,
+                    2
+                ]
+            },
+            "effect": "Enlever 1 feu au local"
+        }
+    ]
+}
