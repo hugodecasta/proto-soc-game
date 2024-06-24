@@ -201,6 +201,9 @@
                     1,
                     2,
                     3
+                ],
+                "incendie plage avant": [
+                    6
                 ]
             },
             "effect": "Tir du missile. Le missile se transforme en détecton dévloiée exoceten direction de sa cible."
@@ -469,9 +472,17 @@
                     3,
                     4
                 ],
+                "mort équipé": [
+                    6
+                ],
                 "non équipé": [
                     1,
                     2
+                ],
+                "mort non équipé": [
+                    4,
+                    5,
+                    6
                 ]
             },
             "effect": "Enlever 1 feu au local"

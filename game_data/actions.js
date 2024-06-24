@@ -1,4 +1,4 @@
-import { br, button, div, h1, h2, h3, hr, span } from "../vanille/components.js"
+import { br, button, div, from_table, h1, h2, h3, hr, span } from "../vanille/components.js"
 
 const actions_data = await (await fetch('/game_data/actions.json')).json()
 
@@ -27,12 +27,17 @@ function local_personnel_comp([local, personnel]) {
 
 function succes_comp(success) {
     if (!success) return null
-    return div().add(
-        ...Object.entries(success).map(([cas, tirage]) => div().add(
-            h3(cas).set_style({ margin: '0px', display: 'inline-block' }),
-            div().set_style({ padding: '5px', marginLeft: '10px', background: 'red', display: 'inline-block', width: 'inline-block' }),
-            ...Array(6).fill(0).map((_, i) => span(i + 1).set_style({ opacity: tirage.includes(i + 1) ? 1 : 0.1, marginLeft: '10px', }))
-        ))
+    return from_table(
+        Object.entries(success).map(([cas, tirage]) => [
+
+            h3(cas).set_style({ margin: '0px', display: 'inline-block', textAlign: 'right', width: '100%' }),
+
+            span().add(
+                div().set_style({ padding: '5px', marginLeft: '10px', background: 'red', display: 'inline-block', width: 'inline-block' }),
+                ...Array(6).fill(0).map((_, i) => span(i + 1).set_style({ opacity: tirage.includes(i + 1) ? 1 : 0.1, marginLeft: '10px', }))
+            )
+
+        ])
     )
 }
 
