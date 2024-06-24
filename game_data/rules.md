@@ -92,11 +92,12 @@ Les discussions ont lieux entre le CDT et les différents services pour s'assure
 
  - Le CDT choisi de se déplacer ou d'agir.
     - Si le CDT décide de se déplacer et qu'il rencontre un obstacle (personnel sur son passage dans une coursive ou dans un local), il peut echanger sa place avec ce personnel. Le CDT se déplace toujours aussi vite que le service le plus rapide.
- - Les services choisissent de se déplacer ou d'agir
-    - Les MOT du services sont déplacés en premier
-    - Le COMA du service est déplacé en dernier
-    - Le COMA peut effectuer une action
+ - Les services choisissent de se déplacer et d'agir
+    - Mouvement de l'équipage du service (COMA + MOTs)
+    - Prise d'action
+    - Mouvement de l'équipage du service (COMA + MOTs)
     - Si des actions sont à effectué et qu'il manque des MOT du service nécessaire à l'action il est possible de les remplacer par d'autres MOT mais en réduisant la probabilité de réuissite de l'action (réussite dés (1->6 ou 1->5) - nombre de MOT incorrects)
+    - A la fin du tour d'un service, le CDT peut se déplacer à nouveau
  - Lorsque c'est au tour du service Operation, à la fin de son tour, le COMAOP tire le dés pour réaliser "OP Détection".
 
 #### 🤖 Actions automatiques
@@ -438,11 +439,11 @@ Attention certaines missions sont confidentielles et doivent n'être révélée 
 ## ↩️ Résumé de tour
 
  - 🦺 équipage
-    - **CDT** : bouge - action
-    - **NAV** : MOTNAVs bougent - COMANAV bouge - Actions
-    - **OP** : MOTOPs bougent - COMAOP bouge - Actions - "Detection OP"
-    - **FUS** : MOTFUSs bougent - COMAFUS bouge - Actions
-    - **AVIA** : MOTAVIAs bougent - COMAVIA bouge - Actions
+    - **CDT** : Mouvement - action - Mouvement
+    - **NAV** : Mouvement - Action - Mouvement - CDT
+    - **OP** : Mouvement - Action - Mouvement - "Detection OP" - CDT
+    - **FUS** : Mouvement - Action - Mouvement - CDT
+    - **AVIA** : Mouvement - Action - Mouvement - CDT
 
  - 🤖 auto
     - 🔥 incendi : +1 par local feu, 6 = spread, 7 = X
