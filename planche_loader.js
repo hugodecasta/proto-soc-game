@@ -322,8 +322,17 @@ function set_planche(mesh) {
             })
         }
         else {
-            got_mesh.position.x = init_obj_point.x + diffx
-            got_mesh.position.y = init_obj_point.y + diffy
+            const components = {
+                x: diffx,
+                y: diffy,
+            }
+            const restricted = (got_mesh.userData.restrict ?? '').split(',')
+            console.log(restricted)
+            for (const comp in components) {
+                if (restricted.length && !restricted.includes(comp)) continue
+                const mover = components[comp]
+                got_mesh.position[comp] = init_obj_point[comp] + mover
+            }
         }
 
         global_planche.trigger_event('obj', {

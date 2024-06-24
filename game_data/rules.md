@@ -110,6 +110,7 @@ Les discussions ont lieux entre le CDT et les différents services pour s'assure
  - 📡 **Détections**. Bouger les détection selon le comportement établi sur leurs cartes détections. Si les détections entrent en collision se réferer à la partie collision.
 
  - 🚁 **hélicoptère**.
+    - Si la porte de l'héliport est ouverte et que le navire passe en régime speed et/ou barre bab ou tri toute, le hangard est inondé et prend instantanément feu avec ses conséquences.
     - Si l'hélicoptère est sur l'héliport et que le navire (jetons jaunes) passe en régime speed et/ou barre bab ou tri toute, l'hélicoptère et son équipage est perdu et l'héliport prend feu, le personnel sur l'héliport est perdu.
     - Si l'hélicoptère est en mer, retirer 1 essence de l'hélicoptère. Si le navire (jeton jaune) passe en régime "speed" ou que l'hélicoptère n'a plus d'essence alors en mer, l'hélicoptère et son équipage sont perdus, mettre l'équipage perdu sur le journal de bord et indiquer un appareil perdu en mer sur le journal de bord.
 
@@ -163,13 +164,13 @@ C'est le commandant en personne ou l'Amiral le cas échéant qui remet les méda
 
 (SICPN: Sauf Indication Contraire indiquée par la Posture du Navire.)
 
- - Déplacement: Les déplacements se font de 3 cases maximums (points ou triangles violets) SICPN. Chaque caisson de coursive (couloir central) est considéré comme une case. Il est possible de se croiser à 3 personnes par caisson de coursive. On ne peut entrer dans un local que si le caisson de coursive donne accès au local et vice-versa. L'entrée dans un local se fait sur n'importe qu'elle poste ou placement (pas de "déplacement dans les locals")
+ - Déplacement: Les déplacements se font de 4 cases maximums (points ou triangles violets) SICPN. Chaque caisson de coursive (couloir central) est considéré comme une case. Il est possible de se croiser à 3 personnes par caisson de coursive. On ne peut entrer dans un local que si le caisson de coursive donne accès au local et vice-versa. L'entrée dans un local se fait sur n'importe qu'elle poste ou placement (pas de "déplacement dans les locals")
 
  - CDT:
     - 🛜 **Recevoir Renseignement**
         - Lieu: CO.C
         - Personnel: CDT, COMAOP, MOTOP(1)
-        - réussite: 1,2,3,4,5 au dés
+        - réussite: immediate
         - effet: selon le contexte de l'action, tirer une carte mission, ou ajouter les points mission (si l'action demandée par la mission)
 
     - ❗**Changement de posture du navire**
@@ -228,7 +229,7 @@ C'est le commandant en personne ou l'Amiral le cas échéant qui remet les méda
     - 📡 **OP Détection** (détecter un objet en mer)
         - Lieu: CO.D
         - Personnel: COMAOP, MOTOP(1)
-        - réussite: 6 au dés (SICPN)
+        - réussite: 5,6 au dés (SICPN)
         - conséquence: tirer 1 carte cap et 1 carte distance pour placer le prochain repert disponible sur la carte, si le repère est sur une côte, fausse détection. Tirer une carte détection pour établir le comportement de la détection, placer cette carte sur la case couleur de la détection disponible. Attention la carte détection ne donne que le comportement mais pas la nature de l'objet détecter. Pour connaitre la nature de l'objet il faut effectuer l'action "Détection de menace"
 
     - 📡 **Détection de menace**
@@ -251,6 +252,20 @@ C'est le commandant en personne ou l'Amiral le cas échéant qui remet les méda
         - réussite: 1,2,3,4,5 (si calib sinon 1,2,3) au dés (SICPN)
         - conséquence: tir de missile Exocet (avant du navire). Le missile se transform en détection en direction de la détection ciblée
 
+    - 🔫 **Ouverture porte héliport**
+        - context: Porte héliport fermée, régime max slow, barre à mid
+        - Lieu: CO.T
+        - Personnel: COMAOP, MOTOP(1)
+        - réussite: 1,2,3,4,5 au dés (SICPN)
+        - conséquence: porte héliport ouverte
+
+    - 🔫 **Fermeture porte héliport**
+        - context: Porte héliport ouverte, régime max slow, barre à mid
+        - Lieu: CO.T
+        - Personnel: COMAOP, MOTOP(1)
+        - réussite: 1,2,3,4,5 au dés (SICPN)
+        - conséquence: porte héliport ouverte
+
  - COMAFUS:
     - 🚣‍♀️ **Zodiak à l'eau**
         - Lieu: hangard semi-rigide
@@ -263,6 +278,12 @@ C'est le commandant en personne ou l'Amiral le cas échéant qui remet les méda
         - Personnel: CDT, MOTFUS(2)
         - réussite: immediate
         - conséquence: Le semi-rigide est remonté sur le navire
+
+    - **transmettre renseignement**
+        - Lieu: héliocoptère à la mer + CO.C
+        - Personnel: CDT, COMAOP, MOTOP(1) au CO.C + COMAFUS, MOTFUS(1) dans l'hélicoptère
+        - réussite: 1,2,3,4 au dés
+        - conséquence: renseignement obtenu (points missions si indiqué)
 
     - ⛽ **Recharge Zodiak**
         - Lieu: hangard semi-rigide
@@ -306,14 +327,14 @@ C'est le commandant en personne ou l'Amiral le cas échéant qui remet les méda
         - conséquence: placer un essence dans l'hélicoptère
 
     - 🚁 **Sortir l'hélicotpère**
-        - contexte: régime=stop/slow/back & barre=mid
+        - contexte: régime=stop/slow/back & barre=mid, porte héliport ouverte
         - Lieu: hangard hélicotpère + héliport
         - Personnel: COMAVIA + MOTAVIA(2) hangard + MOTAVIA(2) héliport
         - réussite: immediate
         - conséquence: placer l'hélicoptère sur le héliport
 
     - 🚁 **Rentrer l'hélicotpère**
-        - contexte: hélicoptère sur le héliport
+        - contexte: hélicoptère sur le héliport, porte héliport ouverte
         - Lieu: hangard hélicotpère + héliport
         - Personnel: COMAVIA + MOTAVIA(2) hangard + MOTAVIA(2) héliport
         - réussite: immediate
